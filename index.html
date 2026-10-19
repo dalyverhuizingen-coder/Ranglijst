@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="daly-logo.svg" type="image/svg+xml">
+<title>Daly Review Ranglijst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: Daly-huisstijl op creme, één kolom voor de telefoon. Blauwe kop met aftelling, podium in oranje/blauw/zand, inhaalrace, volledige stand, klanten, kampioenen, donkere voet. Taalknop NL/EN bovenin. Bewust één licht thema (huisstijl). */
+  :root {
+    color-scheme: light;
+    --oranje: #FF9300;
+    --blauw: #0060AC;
+    --blauw-diep: #004C89;
+    --blauw-zacht: #E3EDF6;
+    --inkt: #1F1F1F;
+    --inkt-zacht: #57564F;
+    --creme: #F8F7EC;
+    --zand: #E7E5DC;
+    --wit: #FFFFFF;
+    --op-donker: rgba(255, 255, 255, 0.78);
+    --font: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --hoek-klein: 12px;
+    --hoek-kaart: 24px;
+    --hoek-knop: 100px;
+  }
+  body { background: var(--creme); color: var(--inkt); font-family: var(--font); font-size: 15px; line-height: 1.55; }
+  .wrap { max-width: 40rem; margin-inline: auto; padding-block: 16px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; }
+
+  /* Kopbalk met logo en taalknop */
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .bar img { height: 46px; width: auto; display: block; }
+  .lang { display: inline-flex; gap: 4px; padding: 4px; border: 2px solid var(--blauw); border-radius: var(--hoek-knop); background: var(--wit); box-shadow: 0 4px 14px rgba(0, 96, 172, 0.18); }
+  .lang button { font: inherit; font-size: 15px; font-weight: 700; letter-spacing: .04em; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px 0 10px; border: 0; border-radius: var(--hoek-knop); background: transparent; color: var(--blauw); cursor: pointer; }
+  .lang button svg { width: 22px; height: 15px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(31, 31, 31, 0.15); flex-shrink: 0; }
+  .lang button[aria-pressed="true"] { background: var(--blauw); color: var(--wit); }
+  .lang button[aria-pressed="false"]:hover { background: var(--blauw-zacht); }
+  .lang button:focus-visible { outline: 3px solid var(--oranje); outline-offset: 1px; }
+
+  /* Blauwe kop */
+  .hero { background: var(--blauw); color: var(--wit); border-radius: var(--hoek-kaart); padding: 24px 22px; display: grid; gap: 16px; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; right: -60px; top: -60px; width: 190px; height: 190px; border-radius: 50%; background: var(--blauw-diep); opacity: .55; }
+  .hero > * { position: relative; z-index: 1; }
+  .eyebrow { font-size: 13px; font-weight: 500; color: var(--op-donker); letter-spacing: .02em; }
+  .hero h1 { margin: 0; font-size: clamp(1.6rem, 6.4vw, 2rem); line-height: 1.15; font-weight: 600; text-wrap: balance; max-width: 18ch; }
+  .countdown { display: inline-flex; align-items: center; gap: 8px; justify-self: start; background: var(--oranje); color: var(--inkt); border-radius: var(--hoek-knop); padding: 6px 16px 6px 8px; font-weight: 600; font-size: 14px; }
+  .countdown .dot { width: 30px; height: 30px; border-radius: 50%; background: var(--inkt); color: var(--oranje); display: grid; place-items: center; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .stat { display: grid; gap: 0; }
+  .stat b { font-size: clamp(1.4rem, 6vw, 1.75rem); font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; color: var(--op-donker); line-height: 1.3; }
+
+  .months { display: flex; flex-wrap: wrap; gap: 8px; }
+  .months:empty { display: none; }
+  .months button { font: inherit; font-size: 14px; font-weight: 500; padding: 6px 16px; border-radius: var(--hoek-knop); border: 1.5px solid var(--blauw); background: var(--wit); color: var(--blauw); cursor: pointer; min-height: 40px; }
+  .months button[aria-pressed="true"] { background: var(--blauw); color: var(--wit); }
+  .months button:focus-visible { outline: 3px solid var(--oranje); outline-offset: 2px; }
+
+  h2 { font-size: 1.2rem; font-weight: 600; margin: 0 0 12px; line-height: 1.3; }
+
+  /* Podium */
+  .podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 10px; }
+  .step { display: grid; gap: 8px; min-width: 0; align-content: end; }
+  .step .who { display: grid; justify-items: center; gap: 2px; text-align: center; min-width: 0; }
+  .step .who svg { width: 28px; height: 22px; display: block; margin-bottom: 2px; }
+  .step .who span { font-weight: 600; font-size: 14px; line-height: 1.25; overflow-wrap: anywhere; }
+  .block { border-radius: var(--hoek-kaart) var(--hoek-kaart) var(--hoek-klein) var(--hoek-klein); display: grid; place-items: center; align-content: center; gap: 0; padding: 10px 6px; text-align: center; transform-origin: bottom; }
+  .block .n { font-size: clamp(2rem, 10vw, 2.6rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .block .l { font-size: 12px; font-weight: 500; }
+  .p1 .block { height: 9.25rem; background: var(--oranje); color: var(--inkt); }
+  .p2 .block { height: 7rem; background: var(--blauw); color: var(--wit); }
+  .p3 .block { height: 5.5rem; background: var(--zand); color: var(--inkt); }
+  .place { font-size: 12px; font-weight: 600; text-align: center; color: var(--inkt-zacht); }
+  @media (prefers-reduced-motion: no-preference) {
+    .block { animation: rise .6s cubic-bezier(.2, .8, .25, 1.1) both; }
+    .p1 .block { animation-delay: .15s; }
+    .p3 .block { animation-delay: .3s; }
+    @keyframes rise { from { transform: scaleY(.82); } to { transform: none; } }
+  }
+
+  /* Inhaalrace */
+  .race { background: var(--wit); border-radius: var(--hoek-kaart); padding: 20px 22px; display: grid; gap: 12px; }
+  .race h2 { margin: 0; }
+  .race ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .race li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .race .ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; }
+  .race .ic svg { width: 17px; height: 17px; }
+  .ic-oranje { background: var(--oranje); }
+  .ic-blauw { background: var(--blauw); }
+  .ic-zand { background: var(--zand); }
+  .race p { margin: 3px 0 0; }
+  .race strong { font-weight: 600; }
+
+  /* Stand */
+  .list { display: grid; gap: 8px; }
+  .row { background: var(--wit); border-radius: var(--hoek-kaart); padding: 12px 16px 12px 12px; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+  .rank { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; border: 1.5px solid var(--zand); color: var(--inkt); background: var(--wit); }
+  .r1 .rank { background: var(--oranje); border-color: var(--oranje); color: var(--inkt); }
+  .r2 .rank { background: var(--blauw); border-color: var(--blauw); color: var(--wit); }
+  .r3 .rank { background: var(--zand); border-color: var(--zand); color: var(--inkt); }
+  .mid { min-width: 0; display: grid; gap: 5px; }
+  .line1 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+  .naam { font-weight: 600; font-size: 16px; }
+  .pill { font-size: 12px; font-weight: 500; border-radius: var(--hoek-knop); padding: 1px 10px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+  .pill svg { width: 12px; height: 12px; }
+  .pill-top { background: var(--oranje); color: var(--inkt); }
+  .pill-heet { background: var(--blauw-zacht); color: var(--blauw); }
+  .track { height: 8px; border-radius: var(--hoek-knop); background: var(--zand); overflow: hidden; }
+  .fill { height: 100%; border-radius: var(--hoek-knop); background: var(--blauw); }
+  .r1 .fill { background: var(--oranje); }
+  .gap { font-size: 12px; color: var(--inkt-zacht); }
+  .cnt { display: grid; justify-items: end; line-height: 1; }
+  .cnt b { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .cnt span { font-size: 11px; color: var(--inkt-zacht); margin-top: 3px; }
+  .empty { background: var(--wit); border-radius: var(--hoek-kaart); padding: 20px; color: var(--inkt-zacht); }
+
+  /* Klanten */
+  .quotes { display: grid; gap: 10px; }
+  .quote { background: var(--wit); border-radius: var(--hoek-kaart); padding: 18px 20px; display: grid; gap: 10px; min-width: 0; }
+  .quote p { margin: 0; font-size: 15px; }
+  .qmeta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; color: var(--inkt-zacht); }
+  .stars { display: inline-flex; gap: 2px; }
+  .stars svg { width: 14px; height: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: var(--hoek-knop); background: var(--blauw-zacht); color: var(--blauw); }
+
+  /* Kampioenen */
+  .champs { display: grid; gap: 8px; }
+  .champ { background: var(--zand); border-radius: var(--hoek-kaart); padding: 16px 20px; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: center; }
+  .champ svg { width: 32px; height: 26px; }
+  .champ b { font-weight: 600; display: block; }
+  .champ span { font-size: 13px; color: var(--inkt-zacht); }
+
+  /* Voet */
+  .voet { background: var(--inkt); color: var(--op-donker); border-radius: var(--hoek-kaart); padding: 22px; display: grid; gap: 10px; font-size: 13.5px; }
+  .voet p { margin: 0; max-width: 62ch; }
+  .voet strong { color: var(--wit); font-weight: 600; }
+</style>
+<style>html,body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<main class="wrap">
+  <div class="bar">
+    <img src="daly-logo.svg" alt="Daly Verhuizingen">
+    <div class="lang" role="group" aria-label="Taal / Language">
+      <button type="button" id="lang-nl" lang="nl" aria-pressed="true" aria-label="Nederlands"><svg viewBox="0 0 9 6" aria-hidden="true"><rect width="9" height="2" fill="#AE1C28"></rect><rect y="2" width="9" height="2" fill="#FFFFFF"></rect><rect y="4" width="9" height="2" fill="#21468B"></rect></svg>NL</button>
+      <button type="button" id="lang-en" lang="en" aria-pressed="false" aria-label="English"><svg viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"></rect><path d="M0 0L60 30M60 0L0 30" stroke="#FFFFFF" stroke-width="6"></path><path d="M0 0L60 30M60 0L0 30" stroke="#C8102E" stroke-width="2"></path><path d="M30 0V30M0 15H60" stroke="#FFFFFF" stroke-width="10"></path><path d="M30 0V30M0 15H60" stroke="#C8102E" stroke-width="6"></path></svg>EN</button>
+    </div>
+  </div>
+
+  <section class="hero" id="kop" aria-labelledby="kop-titel">
+    <div class="eyebrow" id="eyebrow">Reviewcompetitie</div>
+    <h1 id="kop-titel">Wie wordt reviewkampioen?</h1>
+    <div class="countdown" id="countdown" hidden><span class="dot" id="dagen">0</span><span id="aftel-tekst"></span></div>
+    <div class="stats">
+      <div class="stat"><b id="s-reviews">0</b><span data-t="statReviews">reviews</span></div>
+      <div class="stat"><b id="s-gem">0</b><span data-t="statGem">gemiddeld</span></div>
+      <div class="stat"><b id="s-mannen">0</b><span data-t="statMannen">verhuizers op het bord</span></div>
+    </div>
+  </section>
+
+  <nav class="months" id="months" aria-label="Kies een maand"></nav>
+
+  <section id="podium-sectie" aria-labelledby="podium-titel">
+    <h2 id="podium-titel" data-t="podium">Het podium</h2>
+    <div class="podium" id="podium"></div>
+  </section>
+
+  <section class="race" id="race" aria-labelledby="race-titel">
+    <h2 id="race-titel" data-t="race">De inhaalrace</h2>
+    <ul id="race-lijst"></ul>
+  </section>
+
+  <section id="stand-sectie" aria-labelledby="stand-titel">
+    <h2 id="stand-titel">Volledige stand</h2>
+    <div class="list" id="lijst"><div class="empty" data-t="leeg">Nog geen reviews deze maand. De eerste review zet je meteen bovenaan.</div></div>
+  </section>
+
+  <section id="quotes-sectie" aria-labelledby="quotes-titel">
+    <h2 id="quotes-titel" data-t="klanten">Wat klanten over jullie zeggen</h2>
+    <div class="quotes" id="quotes"></div>
+  </section>
+
+  <section id="kampioenen" aria-labelledby="kamp-titel">
+    <h2 id="kamp-titel" data-t="kampioenen">Kampioenen</h2>
+    <div class="champs" id="champs"></div>
+  </section>
+
+  <footer class="voet">
+    <p><strong data-t="hoeKop">Hoe telt het?</strong> <span data-t="hoeTekst">Elke Google review van een klus telt voor iedereen die op die klus stond. Een review telt in de maand waarin hij binnenkomt. Wie aan het eind van de maand de meeste reviews heeft, is reviewkampioen.</span></p>
+    <p><strong data-t="tipKop">Tip:</strong> <span data-t="tipTekst">geef aan het eind van de klus het reviewkaartje af, schrijf jullie namen erop en vraag of de klant ze noemt in de review.</span></p>
+    <p id="bijgewerkt"></p>
+  </footer>
+</main>
+
+<script type="application/json" id="stand">
+{"bijgewerkt": "2026-10-19", "maanden": [{"maand": "2026-10", "reviews": 12, "gemiddeld": 5.0, "ranglijst": [{"naam": "Abdoellah", "reviews": 5}, {"naam": "Zizo", "reviews": 5}, {"naam": "Mido", "reviews": 4}, {"naam": "Ehsane", "reviews": 3}, {"naam": "Sam", "reviews": 3}, {"naam": "Andy", "reviews": 2}, {"naam": "Don", "reviews": 2}, {"naam": "Jan", "reviews": 2}, {"naam": "Rudy", "reviews": 2}, {"naam": "Abdoel", "reviews": 1}, {"naam": "John", "reviews": 1}, {"naam": "Mamdouh", "reviews": 1}, {"naam": "Soentje", "reviews": 1}, {"naam": "Vriend Don", "reviews": 1}], "quotes": [{"van": "Simos", "datum": "2026-10-17", "sterren": 5, "tekst": "Really amazing service and great guys. Even after 12 hours of moving they were cheerful understanding and helpful!", "team": ["Andy", "Abdoellah", "Abdoel", "Mido", "Zizo"]}, {"van": "Sergey", "datum": "2026-10-17", "sterren": 5, "tekst": "Don Jan Rudy did an awesome job. Packing everything quick and efficient", "team": ["Don", "Jan", "Rudy"]}, {"van": "Gianluca", "datum": "2026-10-15", "sterren": 5, "tekst": "Amazing service from team Sam, very efficient and nice people", "team": ["Sam", "Mido"]}, {"van": "Monique", "datum": "2026-10-13", "sterren": 5, "tekst": "Daly heeft dit TOP gedaan. Uitermate vriendelijk en ook bereid net iets extra's te doen.", "team": ["Don", "Jan", "Vriend Don", "Rudy"]}, {"van": "Mary-Ann", "datum": "2026-10-11", "sterren": 5, "tekst": "Team Ap van Daly verhuizing waren echt TOP!!! Alles is goed gegaan, geordend en efficiënt.", "team": ["Abdoellah", "Zizo", "John"]}, {"van": "Mary", "datum": "2026-10-11", "sterren": 5, "tekst": "Heel tevreden, netjes en voorzichtig gewerkt. Luisterden ook goed naar mijn aanwijzingen.", "team": ["Sam", "Mido", "Ehsane"]}, {"van": "Jennifer", "datum": "2026-10-09", "sterren": 5, "tekst": "The team was super efficient, friendly and professional. Wrapped everything safely and it arrived in great condition.", "team": ["Sam", "Ehsane", "Mido"]}, {"van": "Glenn", "datum": "2026-10-05", "sterren": 5, "tekst": "Friendly, professional, helpful, solution oriented, job was finished within time slot.", "team": ["Abdoellah", "Zizo", "Mamdouh"]}, {"van": "Derk", "datum": "2026-10-02", "sterren": 5, "tekst": "Leuke gasten, team Appie, werken hard en handig!", "team": ["Abdoellah", "Ehsane", "Zizo"]}, {"van": "Lisette", "datum": "2026-10-02", "sterren": 5, "tekst": "Super fijn verhuisd met deze boys Andy Soentje! Dank jullie wel!", "team": ["Andy", "Soentje"]}, {"van": "Mano", "datum": "2026-10-01", "sterren": 5, "tekst": "Appie en Zizo waren echt een topteam: hardwerkend, netjes en altijd met een glimlach.", "team": ["Abdoellah", "Zizo"]}]}]}
+</script>
+
+<script>
+  (function () {
+    const NS = 'http://www.w3.org/2000/svg';
+    const M = {
+      nl: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+      en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    };
+    const K = {
+      nl: ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+      en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    };
+    const mv = (n, een, meer) => (n === 1 ? een : meer);
+
+    // Alle teksten in beide talen
+    const T = {
+      nl: {
+        statReviews: 'reviews', statGem: 'gemiddeld', statMannen: 'verhuizers op het bord',
+        podium: 'Het podium', race: 'De inhaalrace', klanten: 'Wat klanten over jullie zeggen', kampioenen: 'Kampioenen',
+        leeg: 'Nog geen reviews deze maand. De eerste review zet je meteen bovenaan.',
+        hoeKop: 'Hoe telt het?',
+        hoeTekst: 'Elke Google review van een klus telt voor iedereen die op die klus stond. Een review telt in de maand waarin hij binnenkomt. Wie aan het eind van de maand de meeste reviews heeft, is reviewkampioen.',
+        tipKop: 'Tip:',
+        tipTekst: 'geef aan het eind van de klus het reviewkaartje af, schrijf jullie namen erop en vraag of de klant ze noemt in de review.',
+        maandenLabel: 'Kies een maand',
+        en: ' en ',
+        rev: (n) => mv(n, 'review', 'reviews'),
+        eyebrowLopend: (mj) => 'Reviewcompetitie ' + mj,
+        eyebrowKlaar: (mj) => 'Afgelopen: ' + mj,
+        titelLopend: (m) => 'Wie wordt reviewkampioen van ' + m + '?',
+        titelKlaar: (namen, m, meer) => namen + (meer ? ' zijn' : ' is') + ' reviewkampioen van ' + m,
+        titelGeen: (m) => 'Geen reviews in ' + m,
+        titelStart: 'De competitie begint met de eerste review.',
+        aftelLaatste: 'Laatste dag, nu telt elke review',
+        aftel: (n) => mv(n, 'dag', 'dagen') + ' tot de eindstand',
+        nogVrij: 'Nog vrij',
+        plaats: (n) => n + 'e plaats',
+        plaatsAria: (n, wie) => n + 'e plaats: ' + wie,
+        leiderSamen: (s, r) => [' delen de koppositie met ' + s + ' ' + r + '.'],
+        leiderAlleen: (s, r) => [' staat alleen bovenaan met ' + s + ' ' + r + '.'],
+        achterTop: (meer, g, r, lopend) => ' ' + (meer ? 'staan' : 'staat') + ' op ' + g + ' ' + r + ' van de top. ' + (lopend ? (g === 1 ? 'Eén goede klus en het is gelijk.' : 'Nog alles mogelijk.') : ''),
+        achterTwee: (meer, g, r) => ' ' + (meer ? 'zitten' : 'zit') + ' ' + g + ' ' + r + ' achter de 2e plaats.',
+        heetKop: 'Heet deze week: ',
+        heet: (namen, n, r) => namen + ' met ' + n + ' ' + r + ' in 7 dagen.',
+        standTitel: (m) => 'Volledige stand ' + m,
+        plekAria: (n) => 'plek ' + n,
+        koploperSamen: 'Gedeeld koploper', koploper: 'Koploper',
+        dezeWeek: (n) => '+' + n + ' deze week',
+        totTop: (g, r) => 'Nog ' + g + ' ' + r + ' tot de top',
+        sterren: (n) => n + ' sterren',
+        geenKampioen: 'Nog geen kampioen',
+        eersteKampioen: (m) => 'Op 1 ' + m + ' staat hier de eerste reviewkampioen.',
+        bijgewerkt: (d) => 'Bijgewerkt op ' + d + '. De stand wordt meerdere keren per dag bijgewerkt.',
+      },
+      en: {
+        statReviews: 'reviews', statGem: 'average', statMannen: 'movers on the board',
+        podium: 'The podium', race: 'The chase', klanten: 'What customers say about you', kampioenen: 'Champions',
+        leeg: 'No reviews this month yet. The first review puts you straight at the top.',
+        hoeKop: 'How does it count?',
+        hoeTekst: 'Every Google review of a job counts for everyone who worked on that job. A review counts in the month it comes in. Whoever has the most reviews at the end of the month is review champion.',
+        tipKop: 'Tip:',
+        tipTekst: 'at the end of the job, hand over the review card, write your names on it and ask the customer to mention them in their review.',
+        maandenLabel: 'Choose a month',
+        en: ' and ',
+        rev: (n) => mv(n, 'review', 'reviews'),
+        eyebrowLopend: (mj) => 'Review competition ' + mj,
+        eyebrowKlaar: (mj) => 'Finished: ' + mj,
+        titelLopend: (m) => 'Who will be review champion of ' + m + '?',
+        titelKlaar: (namen, m, meer) => namen + (meer ? ' are review champions' : ' is review champion') + ' of ' + m,
+        titelGeen: (m) => 'No reviews in ' + m,
+        titelStart: 'The competition starts with the first review.',
+        aftelLaatste: 'Last day, every review counts now',
+        aftel: (n) => mv(n, 'day', 'days') + ' until the final standings',
+        nogVrij: 'Still open',
+        plaats: (n) => ['1st', '2nd', '3rd'][n - 1] + ' place',
+        plaatsAria: (n, wie) => ['1st', '2nd', '3rd'][n - 1] + ' place: ' + wie,
+        leiderSamen: (s, r) => [' share the lead with ' + s + ' ' + r + '.'],
+        leiderAlleen: (s, r) => [' leads alone with ' + s + ' ' + r + '.'],
+        achterTop: (meer, g, r, lopend) => ' ' + (meer ? 'are' : 'is') + ' ' + g + ' ' + r + ' behind the leader. ' + (lopend ? (g === 1 ? 'One good job and it is level.' : 'Still all to play for.') : ''),
+        achterTwee: (meer, g, r) => ' ' + (meer ? 'are' : 'is') + ' ' + g + ' ' + r + ' behind 2nd place.',
+        heetKop: 'Hot this week: ',
+        heet: (namen, n, r) => namen + ' with ' + n + ' ' + r + ' in 7 days.',
+        standTitel: (m) => 'Full standings ' + m,
+        plekAria: (n) => 'place ' + n,
+        koploperSamen: 'Shared leader', koploper: 'Leader',
+        dezeWeek: (n) => '+' + n + ' this week',
+        totTop: (g, r) => g + ' ' + r + ' to the top',
+        sterren: (n) => n + ' stars',
+        geenKampioen: 'No champion yet',
+        eersteKampioen: (m) => 'On 1 ' + m + ' the first review champion will appear here.',
+        bijgewerkt: (d) => 'Updated on ' + d + '. The standings are updated several times a day.',
+      },
+    };
+
+    // taalkeuze: #en in de link, eerdere keuze, of de taal van de telefoon
+    let taal = 'nl';
+    try {
+      const h = (location.hash || '').slice(1).toLowerCase();
+      const opgeslagen = localStorage.getItem('daly-taal');
+      if (h === 'en' || h === 'nl') taal = h;
+      else if (opgeslagen === 'en' || opgeslagen === 'nl') taal = opgeslagen;
+      else if ((navigator.language || '').toLowerCase().startsWith('en')) taal = 'en';
+    } catch (e) {}
+
+    const t = () => T[taal];
+    const mNaam = (m) => M[taal][Number(m.slice(5, 7)) - 1];
+    const maandJaar = (m) => mNaam(m) + ' ' + m.slice(0, 4);
+    const hoofd = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    const datum = (s) => Number(s.slice(8, 10)) + ' ' + K[taal][Number(s.slice(5, 7)) - 1];
+    const lijst = (n) => (n.length < 2 ? n.join('') : n.slice(0, -1).join(', ') + t().en + n[n.length - 1]);
+    const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+    const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+    // kleine iconen
+    const icon = (kind, color) => {
+      const s = document.createElementNS(NS, 'svg');
+      s.setAttribute('aria-hidden', 'true');
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('fill', color);
+      if (kind === 'kroon') { s.setAttribute('viewBox', '0 0 28 22'); p.setAttribute('d', 'M2 6l6 5 6-9 6 9 6-5-2.5 14h-19z'); }
+      if (kind === 'ster') { s.setAttribute('viewBox', '0 0 24 24'); p.setAttribute('d', 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z'); }
+      if (kind === 'vlam') { s.setAttribute('viewBox', '0 0 24 24'); p.setAttribute('d', 'M13 2c.6 3.4 4.8 5.6 4.8 10.6A5.8 5.8 0 0 1 6.2 12.8c0-2.4 1.2-4.2 2.6-5.4.1 2 1.1 3.3 2.4 3.6-.5-3.4.2-6.4 1.8-9z'); }
+      if (kind === 'pijl') { s.setAttribute('viewBox', '0 0 24 24'); p.setAttribute('d', 'M12 3l7 8h-4.5v10h-5V11H5z'); }
+      s.append(p);
+      return s;
+    };
+    const sterren = (n) => { const w = el('span', 'stars'); w.setAttribute('aria-label', t().sterren(n)); for (let i = 0; i < n; i++) w.append(icon('ster', 'var(--oranje)')); return w; };
+
+    let data = { maanden: [] };
+    try { data = JSON.parse(document.getElementById('stand').textContent); } catch (e) {}
+    let maanden = (data.maanden || []).slice().sort((a, b) => a.maand.localeCompare(b.maand));
+    const vandaag = new Date();
+    const dezeMaand = ymd(vandaag).slice(0, 7);
+    let keuze = maanden.length ? maanden[maanden.length - 1].maand : null;
+
+    // taalknop
+    const knopNl = document.getElementById('lang-nl');
+    const knopEn = document.getElementById('lang-en');
+    const zetTaal = (nieuw) => {
+      taal = nieuw;
+      try { localStorage.setItem('daly-taal', nieuw); } catch (e) {}
+      render();
+    };
+    knopNl.addEventListener('click', () => zetTaal('nl'));
+    knopEn.addEventListener('click', () => zetTaal('en'));
+
+    function vasteTeksten() {
+      document.documentElement.lang = taal;
+      knopNl.setAttribute('aria-pressed', String(taal === 'nl'));
+      knopEn.setAttribute('aria-pressed', String(taal === 'en'));
+      document.querySelectorAll('[data-t]').forEach((n) => { const v = t()[n.dataset.t]; if (typeof v === 'string') n.textContent = v; });
+      document.getElementById('months').setAttribute('aria-label', t().maandenLabel);
+      document.getElementById('bijgewerkt').textContent = data.bijgewerkt ? t().bijgewerkt(datum(data.bijgewerkt) + ' ' + data.bijgewerkt.slice(0, 4)) : '';
+    }
+
+    function render() {
+      vasteTeksten();
+      const L = t();
+      const m = maanden.find((x) => x.maand === keuze);
+      const lopend = m && m.maand === dezeMaand;
+      const nav = document.getElementById('months');
+      nav.replaceChildren(...(maanden.length > 1 ? maanden.slice().reverse().map((x) => {
+        const b = el('button', null, hoofd(maandJaar(x.maand)));
+        b.type = 'button';
+        b.setAttribute('aria-pressed', String(x.maand === keuze));
+        b.addEventListener('click', () => { keuze = x.maand; render(); });
+        return b;
+      }) : []));
+
+      if (!m) { document.getElementById('kop-titel').textContent = L.titelStart; return; }
+
+      // standen: gelijke score = gelijke plek
+      const rij = (m.ranglijst || []).slice().sort((a, b) => b.reviews - a.reviews || a.naam.localeCompare(b.naam));
+      const scores = [...new Set(rij.map((r) => r.reviews))];
+      rij.forEach((r) => { r.plek = scores.indexOf(r.reviews) + 1; });
+      const tiers = scores.map((s, i) => ({ plek: i + 1, score: s, namen: rij.filter((r) => r.reviews === s).map((r) => r.naam) }));
+      const top = tiers[0] ? tiers[0].score : 0;
+
+      // vorm van de week: reviews in de 7 dagen t/m de laatste update
+      const ref = data.bijgewerkt || ymd(vandaag);
+      const start = new Date(Date.UTC(Number(ref.slice(0, 4)), Number(ref.slice(5, 7)) - 1, Number(ref.slice(8, 10)) - 6)).toISOString().slice(0, 10);
+      const week = new Map();
+      (m.quotes || []).forEach((q) => { if (q.datum >= start && q.datum <= ref) (q.team || []).forEach((n) => week.set(n, (week.get(n) || 0) + 1)); });
+
+      // kop
+      document.getElementById('eyebrow').textContent = lopend ? L.eyebrowLopend(maandJaar(m.maand)) : L.eyebrowKlaar(maandJaar(m.maand));
+      document.getElementById('kop-titel').textContent = lopend
+        ? L.titelLopend(mNaam(m.maand))
+        : (tiers[0] ? hoofd(L.titelKlaar(lijst(tiers[0].namen), mNaam(m.maand), tiers[0].namen.length > 1)) : L.titelGeen(mNaam(m.maand)));
+      const cd = document.getElementById('countdown');
+      if (lopend) {
+        const laatste = new Date(vandaag.getFullYear(), vandaag.getMonth() + 1, 0).getDate();
+        const over = laatste - vandaag.getDate();
+        document.getElementById('dagen').textContent = String(over);
+        document.getElementById('aftel-tekst').textContent = over === 0 ? L.aftelLaatste : L.aftel(over);
+        cd.hidden = false;
+      } else { cd.hidden = true; }
+      document.getElementById('s-reviews').textContent = String(m.reviews || 0);
+      const gem = Number(m.gemiddeld || 0).toFixed(1);
+      document.getElementById('s-gem').textContent = (taal === 'nl' ? gem.replace('.', ',') : gem) + ' ★';
+      document.getElementById('s-mannen').textContent = String(rij.length);
+
+      // podium: 2e links, 1e midden, 3e rechts
+      const pod = document.getElementById('podium');
+      const stappen = [tiers[1], tiers[0], tiers[2]];
+      pod.replaceChildren(...stappen.map((tr, i) => {
+        const nr = [2, 1, 3][i];
+        const s = el('div', 'step p' + nr);
+        const who = el('div', 'who');
+        if (nr === 1 && tr) who.append(icon('kroon', 'var(--oranje)'));
+        (tr ? tr.namen : [L.nogVrij]).forEach((n) => who.append(el('span', null, n)));
+        const block = el('div', 'block');
+        block.append(el('span', 'n', tr ? String(tr.score) : '0'), el('span', 'l', L.rev(tr ? tr.score : 0)));
+        block.setAttribute('aria-label', L.plaatsAria(nr, tr ? lijst(tr.namen) + ', ' + tr.score + ' ' + L.rev(tr.score) : L.nogVrij));
+        s.append(who, block, el('div', 'place', L.plaats(nr)));
+        return s;
+      }));
+      document.getElementById('podium-sectie').hidden = !tiers.length;
+
+      // inhaalrace
+      const race = [];
+      const item = (kind, kleur, iconKleur, delen) => {
+        const li = el('li');
+        const ic = el('span', 'ic ' + kleur);
+        ic.append(icon(kind, iconKleur));
+        const p = el('p');
+        delen.forEach(([tekst, vet]) => p.append(vet ? el('strong', null, tekst) : document.createTextNode(tekst)));
+        li.append(ic, p);
+        return li;
+      };
+      if (tiers[0]) {
+        const tr = tiers[0];
+        const zin = tr.namen.length > 1 ? L.leiderSamen(tr.score, L.rev(tr.score)) : L.leiderAlleen(tr.score, L.rev(tr.score));
+        race.push(item('kroon', 'ic-oranje', 'var(--inkt)', [[lijst(tr.namen), 1], [zin[0]]]));
+      }
+      if (tiers[1]) {
+        const g = top - tiers[1].score;
+        race.push(item('pijl', 'ic-blauw', 'var(--wit)', [[lijst(tiers[1].namen), 1], [L.achterTop(tiers[1].namen.length > 1, g, L.rev(g), lopend)]]));
+      }
+      if (tiers[2]) {
+        const g = tiers[1].score - tiers[2].score;
+        race.push(item('pijl', 'ic-zand', 'var(--inkt)', [[lijst(tiers[2].namen), 1], [L.achterTwee(tiers[2].namen.length > 1, g, L.rev(g))]]));
+      }
+      if (lopend && week.size) {
+        const max = Math.max(...week.values());
+        const heet = [...week].filter(([, v]) => v === max).map(([k]) => k).sort();
+        race.push(item('vlam', 'ic-oranje', 'var(--inkt)', [[L.heetKop, 1], [L.heet(lijst(heet), max, L.rev(max))]]));
+      }
+      document.getElementById('race-lijst').replaceChildren(...race);
+      document.getElementById('race').hidden = !race.length;
+
+      // volledige stand
+      document.getElementById('stand-titel').textContent = L.standTitel(mNaam(m.maand));
+      const lijstEl = document.getElementById('lijst');
+      if (!rij.length) {
+        lijstEl.replaceChildren(el('div', 'empty', L.leeg));
+      } else {
+        lijstEl.replaceChildren(...rij.map((r) => {
+          const row = el('div', 'row' + (r.plek <= 3 ? ' r' + r.plek : ''));
+          const rank = el('span', 'rank', String(r.plek));
+          rank.setAttribute('aria-label', L.plekAria(r.plek));
+          const mid = el('div', 'mid');
+          const l1 = el('div', 'line1');
+          l1.append(el('span', 'naam', r.naam));
+          if (r.plek === 1) { const p = el('span', 'pill pill-top'); p.append(icon('kroon', 'var(--inkt)'), document.createTextNode(tiers[0].namen.length > 1 ? L.koploperSamen : L.koploper)); l1.append(p); }
+          const w = lopend ? (week.get(r.naam) || 0) : 0;
+          if (w) { const p = el('span', 'pill pill-heet'); p.append(icon('vlam', 'var(--blauw)'), document.createTextNode(L.dezeWeek(w))); l1.append(p); }
+          const track = el('div', 'track');
+          const fill = el('div', 'fill');
+          fill.style.width = (top ? Math.max(6, (r.reviews / top) * 100) : 0) + '%';
+          track.append(fill);
+          mid.append(l1, track);
+          if (r.plek > 1) { const g = top - r.reviews; mid.append(el('span', 'gap', L.totTop(g, L.rev(g)))); }
+          const cnt = el('div', 'cnt');
+          cnt.append(el('b', null, String(r.reviews)), el('span', null, L.rev(r.reviews)));
+          row.append(rank, mid, cnt);
+          return row;
+        }));
+      }
+
+      // klanten: de tekst blijft in de taal van de klant
+      const qs = m.quotes || [];
+      document.getElementById('quotes').replaceChildren(...qs.map((q) => {
+        const card = el('article', 'quote');
+        card.append(el('p', null, '“' + q.tekst + '”'));
+        const meta = el('div', 'qmeta');
+        meta.append(sterren(q.sterren || 5), el('span', null, q.van + ', ' + datum(q.datum)));
+        const chips = el('div', 'chips');
+        (q.team || []).forEach((n) => chips.append(el('span', null, n)));
+        card.append(meta, chips);
+        return card;
+      }));
+      document.getElementById('quotes-sectie').hidden = !qs.length;
+
+      // kampioenen van afgelopen maanden
+      const klaar = maanden.filter((x) => x.maand < dezeMaand && (x.ranglijst || []).length).slice().reverse();
+      const champs = document.getElementById('champs');
+      if (klaar.length) {
+        champs.replaceChildren(...klaar.map((x) => {
+          const best = Math.max(...x.ranglijst.map((r) => r.reviews));
+          const namen = x.ranglijst.filter((r) => r.reviews === best).map((r) => r.naam).sort();
+          const c = el('div', 'champ');
+          const d = el('div');
+          d.append(el('b', null, lijst(namen)), el('span', null, hoofd(maandJaar(x.maand)) + ' · ' + best + ' ' + L.rev(best)));
+          c.append(icon('kroon', 'var(--oranje)'), d);
+          return c;
+        }));
+      } else {
+        const laatst = maanden.length ? maanden[maanden.length - 1].maand : dezeMaand;
+        const volgende = M[taal][Number(laatst.slice(5, 7)) % 12];
+        const c = el('div', 'champ');
+        const d = el('div');
+        d.append(el('b', null, L.geenKampioen), el('span', null, L.eersteKampioen(volgende)));
+        c.append(icon('kroon', 'var(--oranje)'), d);
+        champs.replaceChildren(c);
+      }
+    }
+
+    render();
+    fetch('stand.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d || !Array.isArray(d.maanden)) return;
+      data = d;
+      maanden = d.maanden.slice().sort((a, b) => a.maand.localeCompare(b.maand));
+      keuze = maanden.length ? maanden[maanden.length - 1].maand : null;
+      render();
+    }).catch(() => {});
+  })();
+</script>
+</body>
+</html>
